@@ -49,4 +49,9 @@ struct PersistenceController {
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
+
+    /// Convenience logger using the shared view context.
+    var feedbackLogger: FeedbackLogger {
+        FeedbackLogger(context: container.viewContext)
+    }
 }

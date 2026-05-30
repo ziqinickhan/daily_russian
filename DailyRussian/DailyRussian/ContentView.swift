@@ -45,6 +45,7 @@ struct MacOSSidebarView: View {
         case dashboard = "Dashboard"
         case grammar = "Grammar"
         case reading = "Reading"
+        case news = "News"
         case culture = "Culture"
         case aiChat = "AI Tutor"
 
@@ -53,6 +54,7 @@ struct MacOSSidebarView: View {
             case .dashboard: return "chart.bar"
             case .grammar: return "book.pages"
             case .reading: return "text.book.closed"
+            case .news: return "newspaper"
             case .culture: return "music.note.list"
             case .aiChat: return "bubble.left.and.text.bubble.right"
             }
@@ -77,6 +79,8 @@ struct MacOSSidebarView: View {
                 GrammarView()
             case .reading:
                 ReadingView()
+            case .news:
+                NewsView()
             case .culture:
                 CultureView()
             case .aiChat:

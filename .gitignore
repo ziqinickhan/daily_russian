@@ -19,7 +19,7 @@ Pods/
 # Secrets & config
 *.xcconfig
 !Sample.xcconfig
-Secrets/
+Secrets/deepseek_config.json
 Config/Debug.xcconfig
 Config/Release.xcconfig
 

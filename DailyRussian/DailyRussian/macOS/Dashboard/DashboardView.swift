@@ -45,6 +45,10 @@ struct DashboardView: View {
             }
             .padding()
 
+            // Study calendar heat map
+            StudyCalendarView()
+                .padding(.horizontal)
+
             // Recent sessions
             if !sessions.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {

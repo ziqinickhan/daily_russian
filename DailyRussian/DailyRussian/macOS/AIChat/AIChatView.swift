@@ -1,31 +1,76 @@
 import SwiftUI
 
-/// AI-powered grammar help (Deepseek API). On-demand only — user must explicitly ask.
+/// AI-powered grammar help via Deepseek API. On-demand only.
 struct AIChatView: View {
     @State private var messages: [ChatMessage] = []
     @State private var inputText = ""
     @State private var isLoading = false
-    @State private var isAvailable = false  // Set to true when API key configured
+    @State private var errorText: String?
+
+    private let ai = DeepseekService()
 
     var body: some View {
         VStack(spacing: 0) {
-            // Messages
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    if messages.isEmpty {
-                        ContentUnavailableView(
-                            "Ask me about Russian!",
-                            systemImage: "bubble.left.and.text.bubble.right",
-                            description: Text("Type a question about grammar, cases, or usage.")
-                        )
-                        .padding(.top, 40)
-                    }
+            // Messages area
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 12) {
+                        if messages.isEmpty {
+                            VStack(spacing: 12) {
+                                Image(systemName: "bubble.left.and.text.bubble.right")
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(.secondary)
+                                Text("Ask me about Russian!")
+                                    .font(.title3)
+                                Text("Grammar, cases, verb aspects, usage — I'll explain with examples.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
 
-                    ForEach(messages) { message in
-                        ChatBubble(message: message)
+                                VStack(alignment: .leading, spacing: 6) {
+                                    SuggestionChip("What's the difference between идти and ходить?") {
+                                        sendMessage($0)
+                                    }
+                                    SuggestionChip("Explain when to use genitive case") {
+                                        sendMessage($0)
+                                    }
+                                    SuggestionChip("Give me example sentences with verbs of motion") {
+                                        sendMessage($0)
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 32)
+                        }
+
+                        ForEach(messages) { message in
+                            ChatBubble(message: message)
+                                .id(message.id)
+                        }
+
+                        if isLoading {
+                            HStack {
+                                ProgressView()
+                                    .padding()
+                                Text("Thinking...")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+
+                        if let error = errorText {
+                            Text(error)
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                                .padding()
+                        }
+                    }
+                    .padding()
+                }
+                .onChange(of: messages.count) { _, _ in
+                    if let last = messages.last {
+                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
                     }
                 }
-                .padding()
             }
 
             Divider()
@@ -34,55 +79,77 @@ struct AIChatView: View {
             HStack(spacing: 8) {
                 TextField("Ask about Russian grammar...", text: $inputText)
                     .textFieldStyle(.roundedBorder)
-                    .disabled(!isAvailable || isLoading)
-                    .onSubmit { sendMessage() }
+                    .disabled(isLoading)
+                    .onSubmit { sendMessage(inputText) }
 
                 Button {
-                    sendMessage()
+                    sendMessage(inputText)
                 } label: {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
                 }
-                .disabled(inputText.isEmpty || isLoading || !isAvailable)
+                .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isLoading)
             }
             .padding()
         }
         .navigationTitle("AI Tutor")
-        .toolbar {
-            if !isAvailable {
-                ToolbarItem {
-                    Label("API not configured", systemImage: "exclamationmark.triangle")
-                        .foregroundStyle(.orange)
-                }
-            }
-        }
     }
 
-    private func sendMessage() {
-        let question = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+    private func sendMessage(_ text: String) {
+        let question = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !question.isEmpty else { return }
 
         let userMessage = ChatMessage(role: .user, content: question)
         messages.append(userMessage)
         inputText = ""
+        errorText = nil
 
-        // Placeholder — will be replaced with Deepseek API call
         Task {
             isLoading = true
             defer { isLoading = false }
 
-            let response = ChatMessage(
-                role: .assistant,
-                content: "This is a placeholder. The Deepseek API will be integrated here. Your question was: \"\(question)\""
-            )
-            messages.append(response)
+            do {
+                let history = messages.dropLast().suffix(6).map {
+                    DeepseekService.Message(role: $0.role == .user ? "user" : "assistant", content: $0.content)
+                }
+                let response = try await ai.chat(userMessage: question, history: history)
+                let assistantMessage = ChatMessage(role: .assistant, content: response)
+                messages.append(assistantMessage)
+            } catch {
+                errorText = error.localizedDescription
+            }
         }
+    }
+}
+
+// MARK: - Suggestion Chips
+
+struct SuggestionChip: View {
+    let text: String
+    let action: (String) -> Void
+
+    init(_ text: String, action: @escaping (String) -> Void) {
+        self.text = text
+        self.action = action
+    }
+
+    var body: some View {
+        Button {
+            action(text)
+        } label: {
+            Text(text)
+                .font(.caption)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(.quaternary, in: Capsule())
+        }
+        .buttonStyle(.plain)
     }
 }
 
 // MARK: - Chat Types
 
-struct ChatMessage: Identifiable {
+struct ChatMessage: Identifiable, Hashable {
     let id = UUID()
     let role: Role
     let content: String
@@ -99,12 +166,15 @@ struct ChatBubble: View {
         HStack {
             if message.role == .user { Spacer() }
 
-            Text(message.content)
-                .padding(12)
-                .background(message.role == .user ? Color.blue : Color(.controlBackgroundColor))
-                .foregroundStyle(message.role == .user ? .white : .primary)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .frame(maxWidth: 300, alignment: message.role == .user ? .trailing : .leading)
+            VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 4) {
+                Text(message.content)
+                    .padding(12)
+                    .background(message.role == .user ? Color.accentColor : Color(.controlBackgroundColor))
+                    .foregroundStyle(message.role == .user ? .white : .primary)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .textSelection(.enabled)
+            }
+            .frame(maxWidth: 500, alignment: message.role == .user ? .trailing : .leading)
 
             if message.role == .assistant { Spacer() }
         }

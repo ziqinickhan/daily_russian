@@ -16,6 +16,12 @@ struct DailyRussianApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .onAppear {
+                    persistenceController.feedbackLogger.log(
+                        type: .appLaunch,
+                        detail: "App launched"
+                    )
+                }
         }
     }
 }
