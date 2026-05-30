@@ -1,0 +1,41 @@
+# Xcode - build artifacts
+build/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# Xcode - user-specific
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Xcode - breakpoints
+*.xcodeproj/xcshareddata/xcdebugger/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# CocoaPods (if we ever use it)
+Pods/
+
+# Secrets & config
+*.xcconfig
+!Sample.xcconfig
+Secrets/
+Config/Debug.xcconfig
+Config/Release.xcconfig
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Core Data - these are generated at build time
+*.xcdatamodeld/*.xcdatamodel/contents
+# (note: the model file itself .xcdatamodeld IS committed)
+
+# Fastlane / archive
+fastlane/report.xml
+*.ipa
+*.dSYM.zip
+*.dSYM
