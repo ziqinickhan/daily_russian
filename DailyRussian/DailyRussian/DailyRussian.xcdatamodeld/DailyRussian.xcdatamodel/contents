@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
+    <entity name="WordEntry" representedClassName="WordEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="difficulty" optional="NO" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
+        <attribute name="easeFactor" optional="NO" attributeType="Double" defaultValueString="2.5" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isLearned" optional="NO" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastReviewed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="nextReview" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="partOfSpeech" optional="YES" attributeType="String"/>
+        <attribute name="reviewCount" optional="NO" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="reviewInterval" optional="NO" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="translation" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="word" optional="NO" attributeType="String" defaultValueString=""/>
+        <relationship name="culturalSource" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="CulturalItem" inverseName="extractedVocab" inverseEntity="CulturalItem"/>
+        <relationship name="phrases" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="PhraseEntry" inverseName="words" inverseEntity="PhraseEntry"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="PhraseEntry" representedClassName="PhraseEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="context" optional="YES" attributeType="String"/>
+        <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="phrase" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="source" optional="YES" attributeType="String"/>
+        <attribute name="translation" optional="NO" attributeType="String" defaultValueString=""/>
+        <relationship name="words" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="WordEntry" inverseName="phrases" inverseEntity="WordEntry"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="StudySession" representedClassName="StudySession" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="duration" optional="NO" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="platform" optional="YES" attributeType="String"/>
+        <attribute name="wordsLearned" optional="NO" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="wordsReviewed" optional="NO" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="GrammarNote" representedClassName="GrammarNote" syncable="YES" codeGenerationType="class">
+        <attribute name="category" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="content" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" optional="NO" attributeType="String" defaultValueString=""/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="CulturalItem" representedClassName="CulturalItem" syncable="YES" codeGenerationType="class">
+        <attribute name="descriptionText" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="link" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="NO" attributeType="String" defaultValueString=""/>
+        <attribute name="type" optional="NO" attributeType="String" defaultValueString=""/>
+        <relationship name="extractedVocab" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="WordEntry" inverseName="culturalSource" inverseEntity="WordEntry"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="WordEntry" positionX="-243" positionY="-54" width="128" height="268"/>
+        <element name="PhraseEntry" positionX="0" positionY="-54" width="128" height="180"/>
+        <element name="StudySession" positionX="243" positionY="-54" width="128" height="148"/>
+        <element name="GrammarNote" positionX="-243" positionY="270" width="128" height="124"/>
+        <element name="CulturalItem" positionX="0" positionY="270" width="128" height="148"/>
+    </elements>
+</model>

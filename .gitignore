@@ -1,15 +1,13 @@
 # Xcode - build artifacts
 build/
 DerivedData/
-*.xcworkspace/xcuserdata/
-*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 
-# Xcode - user-specific
-*.xcodeproj/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcuserdata/
+# Xcode - user-specific (never commit these at any depth)
+**/xcuserdata/
+**/xcshareddata/IDEWorkspaceChecks.plist
 
 # Xcode - breakpoints
-*.xcodeproj/xcshareddata/xcdebugger/
+**/xcdebugger/
 
 # Swift Package Manager
 .swiftpm/
@@ -30,9 +28,7 @@ Config/Release.xcconfig
 *.swp
 *~
 
-# Core Data - these are generated at build time
-*.xcdatamodeld/*.xcdatamodel/contents
-# (note: the model file itself .xcdatamodeld IS committed)
+# Core Data - the .xcdatamodeld IS committed (it's source code)
 
 # Fastlane / archive
 fastlane/report.xml
