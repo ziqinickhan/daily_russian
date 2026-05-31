@@ -91,6 +91,7 @@ struct MacOSSidebarView: View {
         }
     }
 
+    @EnvironmentObject private var navigation: AppNavigation
     @State private var selectedSection: Section = .dashboard
 
     var body: some View {
@@ -117,6 +118,11 @@ struct MacOSSidebarView: View {
                 CultureView()
             case .aiChat:
                 AIChatView()
+            }
+        }
+        .onChange(of: navigation.navigateToVocabWithWord) { _, target in
+            if target != nil {
+                selectedSection = .vocabulary
             }
         }
     }

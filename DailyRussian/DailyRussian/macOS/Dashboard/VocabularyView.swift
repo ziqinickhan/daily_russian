@@ -7,6 +7,7 @@ import CoreData
 /// - Shows case declensions when available
 struct VocabularyView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var navigation: AppNavigation
 
     @FetchRequest(
         sortDescriptors: [
@@ -163,6 +164,14 @@ struct VocabularyView: View {
             }
         }
         .navigationTitle("Vocabulary")
+        .onReceive(navigation.$navigateToVocabWithWord) { wordID in
+            if let id = wordID {
+                selectedWordID = id
+                searchText = ""
+                selectedTag = nil
+                navigation.navigateToVocabWithWord = nil
+            }
+        }
     }
 }
 
