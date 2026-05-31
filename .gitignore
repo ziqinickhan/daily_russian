@@ -16,10 +16,10 @@ Package.resolved
 # CocoaPods (if we ever use it)
 Pods/
 
-# Secrets & config
+# Secrets & config — real keys stay local
 *.xcconfig
 !Sample.xcconfig
-Secrets/deepseek_config.json
+**/Secrets/deepseek_config.json
 Config/Debug.xcconfig
 Config/Release.xcconfig
 

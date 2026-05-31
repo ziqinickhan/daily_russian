@@ -7,51 +7,67 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-
-        // Seed a sample word for previews
         let sampleWord = WordEntry(context: viewContext)
         sampleWord.id = UUID()
-        sampleWord.word = "привет"
+        sampleWord.word = "приве́т"
         sampleWord.translation = "hello"
         sampleWord.partOfSpeech = "interjection"
         sampleWord.difficulty = 1
         sampleWord.dateAdded = Date()
-        sampleWord.isLearned = false
         sampleWord.reviewCount = 0
         sampleWord.reviewInterval = 0
         sampleWord.easeFactor = 2.5
-
-        do {
-            try viewContext.save()
-        } catch {
-            fatalError("Preview setup error: \(error)")
-        }
+        try? viewContext.save()
         return result
     }()
 
-    let container: NSPersistentCloudKitContainer
+    let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentCloudKitContainer(name: "DailyRussian")
+        // Use local store first (CloudKit needs iCloud container configured in dev portal).
+        // To enable sync later: switch to NSPersistentCloudKitContainer.
+        let storeURL: URL
         if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+            storeURL = URL(fileURLWithPath: "/dev/null")
+        } else {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            storeURL = appSupport.appendingPathComponent("DailyRussian.sqlite")
+            // Ensure directory exists
+            try? FileManager.default.createDirectory(at: appSupport, withIntermediateDirectories: true)
         }
+
+        let storeDescription = NSPersistentStoreDescription(url: storeURL)
+        container = NSPersistentContainer(name: "DailyRussian")
+        container.persistentStoreDescriptions = [storeDescription]
+
         container.loadPersistentStores { [container] _, error in
-            if let error = error as NSError? {
-                print("Persistent store load error: \(error.localizedDescription)")
+            if let error = error {
+                print("Store load error: \(error.localizedDescription)")
             } else {
-                // Seed initial vocabulary and grammar on first launch
+                print("Store loaded at: \(storeURL.path)")
                 let ctx = container.viewContext
-                DispatchQueue.main.async {
-                    SeedDataProvider(context: ctx).seedIfNeeded()
-                }
+                SeedDataProvider(context: ctx).seedIfNeeded()
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 
-    /// Convenience logger using the shared view context.
     var feedbackLogger: FeedbackLogger {
         FeedbackLogger(context: container.viewContext)
+    }
+
+    /// Re-run seeding (resets all data).
+    func reseed() {
+        let entities = ["WordEntry", "PhraseEntry", "GrammarNote", "StudySession", "CulturalItem", "FeedbackEvent"]
+        let ctx = container.viewContext
+        ctx.perform {
+            for entity in entities {
+                let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+                let delete = NSBatchDeleteRequest(fetchRequest: fetch)
+                _ = try? ctx.execute(delete)
+            }
+            try? ctx.save()
+            SeedDataProvider(context: ctx).seedIfNeeded()
+        }
     }
 }

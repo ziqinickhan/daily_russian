@@ -2,13 +2,38 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        #if os(iOS)
-        IOSTabView()
-        #elseif os(macOS)
-        MacOSSidebarView()
-        #else
-        Text("Unsupported platform")
-        #endif
+        Group {
+            #if os(iOS)
+            IOSTabView()
+            #elseif os(macOS)
+            MacOSSidebarView()
+            #else
+            Text("Unsupported platform")
+            #endif
+        }
+        .modifier(SeedOnAppear())
+    }
+}
+
+// MARK: - Seed On First Appear (safety net)
+
+struct SeedOnAppear: ViewModifier {
+    @Environment(\.managedObjectContext) private var viewContext
+    @State private var hasChecked = false
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                guard !hasChecked else { return }
+                hasChecked = true
+                // If data didn't get seeded during store load, do it now
+                let fetch: NSFetchRequest<WordEntry> = WordEntry.fetchRequest()
+                fetch.fetchLimit = 1
+                let count = (try? viewContext.count(for: fetch)) ?? 0
+                if count == 0 {
+                    SeedDataProvider(context: viewContext).seedIfNeeded()
+                }
+            }
     }
 }
 
@@ -43,6 +68,7 @@ struct IOSTabView: View {
 struct MacOSSidebarView: View {
     enum Section: String, CaseIterable {
         case dashboard = "Dashboard"
+        case vocabulary = "Vocabulary"
         case grammar = "Grammar"
         case reading = "Reading"
         case news = "News"
@@ -52,6 +78,7 @@ struct MacOSSidebarView: View {
         var icon: String {
             switch self {
             case .dashboard: return "chart.bar"
+            case .vocabulary: return "character.book.closed"
             case .grammar: return "book.pages"
             case .reading: return "text.book.closed"
             case .news: return "newspaper"
@@ -75,6 +102,8 @@ struct MacOSSidebarView: View {
             switch selectedSection {
             case .dashboard:
                 DashboardView()
+            case .vocabulary:
+                VocabularyView()
             case .grammar:
                 GrammarView()
             case .reading:

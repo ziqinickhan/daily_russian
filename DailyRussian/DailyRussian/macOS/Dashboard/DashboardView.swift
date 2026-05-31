@@ -17,6 +17,28 @@ struct DashboardView: View {
 
     var body: some View {
         ScrollView {
+            // No-data banner
+            if allWords.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundStyle(.orange)
+                    Text("No vocabulary loaded")
+                        .font(.headline)
+                    Text("The seed data hasn't been loaded yet. Tap below to initialize.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button("Load Vocabulary & Grammar") {
+                        PersistenceController.shared.reseed()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.orange.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal)
+            }
+
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 StatCard(
                     title: "Total Words",
