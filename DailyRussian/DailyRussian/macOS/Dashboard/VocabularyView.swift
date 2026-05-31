@@ -300,6 +300,63 @@ struct WordDetailView: View {
                     }
                 }
 
+                // Verb conjugations
+                if let conjJSON = word.conjugation,
+                   let data = conjJSON.data(using: .utf8),
+                   let conj = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+                   !conj.isEmpty {
+                    Divider()
+                    Text("Conjugation")
+                        .font(.headline)
+
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 8) {
+                        ForEach(["я","ты","он","мы","вы","они"], id: \.self) { person in
+                            if let form = conj[person] {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(person)
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    Text(form)
+                                        .font(.callout)
+                                        .fontWeight(.medium)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+
+                    // Past tense
+                    let pastKeys = ["он(пр)","она(пр)","оно(пр)","они(пр)"]
+                    let hasPast = pastKeys.contains { conj[$0] != nil }
+                    if hasPast {
+                        Text("Past Tense")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 4)
+                        LazyVGrid(columns: [
+                            GridItem(.flexible()), GridItem(.flexible()),
+                            GridItem(.flexible()), GridItem(.flexible())
+                        ], spacing: 8) {
+                            ForEach(pastKeys, id: \.self) { key in
+                                if let form = conj[key] {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(key)
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                        Text(form)
+                                            .font(.callout)
+                                            .fontWeight(.medium)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if word.reviewCount > 0 {
                     Divider()
                     Text("Review Stats")

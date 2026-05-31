@@ -1,5 +1,12 @@
 # History
 
+## 2026-05-31 13:10 UTC — OpenRussian dictionary integration
+- Integrated OpenRussian.org dataset (26,983 nouns, 9,964 verbs, 5,521 adjectives)
+- 95 words now have full 12-case declension tables
+- 28 verbs now have full conjugation tables (present + past tense)
+- Conjugation display in Vocabulary detail panel
+- CSV resource files for future dictionary search
+
 ## 2026-05-31 05:00 UTC — Major expansion
 - **Vocabulary**: Expanded from 63 to 220+ words (greetings, food, verbs, motion, body, weather, colors, numbers, technology, emotions, prepositions)
 - **Phrases**: Added 20 common phrases with context labels via PhraseEntry entity

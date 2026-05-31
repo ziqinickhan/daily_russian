@@ -14,6 +14,7 @@
         <attribute name="translation" optional="NO" attributeType="String" defaultValueString=""/>
         <attribute name="word" optional="NO" attributeType="String" defaultValueString=""/>
         <attribute name="caseForms" optional="YES" attributeType="String"/>
+        <attribute name="conjugation" optional="YES" attributeType="String"/>
         <attribute name="note" optional="YES" attributeType="String"/>
         <relationship name="culturalSource" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="CulturalItem" inverseName="extractedVocab" inverseEntity="CulturalItem"/>
         <relationship name="phrases" optional="YES" toMany="YES" deletionRule="nullify" destinationEntity="PhraseEntry" inverseName="words" inverseEntity="PhraseEntry"/>

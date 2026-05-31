@@ -28,6 +28,9 @@ Config/Release.xcconfig
 *.swp
 *~
 
+# Large data files — download separately
+Resources/*.csv
+
 # Core Data - the .xcdatamodeld IS committed (it's source code)
 
 # Fastlane / archive
