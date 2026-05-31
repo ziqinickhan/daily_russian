@@ -1,6 +1,6 @@
 import CoreData
 
-struct PersistenceController {
+final class PersistenceController {
     static let shared = PersistenceController()
 
     @MainActor
@@ -24,29 +24,41 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        // Use local store first (CloudKit needs iCloud container configured in dev portal).
-        // To enable sync later: switch to NSPersistentCloudKitContainer.
-        let storeURL: URL
+        container = NSPersistentContainer(name: "DailyRussian")
+
         if inMemory {
-            storeURL = URL(fileURLWithPath: "/dev/null")
+            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         } else {
-            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            storeURL = appSupport.appendingPathComponent("DailyRussian.sqlite")
-            // Ensure directory exists
+            // Store in Application Support
+            let appSupport = FileManager.default.urls(
+                for: .applicationSupportDirectory, in: .userDomainMask
+            ).first!
             try? FileManager.default.createDirectory(at: appSupport, withIntermediateDirectories: true)
+            let storeURL = appSupport.appendingPathComponent("DailyRussian.sqlite")
+
+            let description = NSPersistentStoreDescription(url: storeURL)
+            // Enable lightweight migration for model changes
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+            container.persistentStoreDescriptions = [description]
         }
 
-        let storeDescription = NSPersistentStoreDescription(url: storeURL)
-        container = NSPersistentContainer(name: "DailyRussian")
-        container.persistentStoreDescriptions = [storeDescription]
-
-        container.loadPersistentStores { [container] _, error in
+        container.loadPersistentStores { _, error in
             if let error = error {
-                print("Store load error: \(error.localizedDescription)")
+                // If migration fails or store is corrupt, delete and recreate
+                print("Store load failed: \(error.localizedDescription) — recreating...")
+                self.destroyStore()
+                self.container.loadPersistentStores { _, retryError in
+                    if let retryError = retryError {
+                        print("Retry also failed: \(retryError.localizedDescription)")
+                    } else {
+                        print("Store recreated successfully")
+                        SeedDataProvider(context: self.container.viewContext).seedIfNeeded()
+                    }
+                }
             } else {
-                print("Store loaded at: \(storeURL.path)")
-                let ctx = container.viewContext
-                SeedDataProvider(context: ctx).seedIfNeeded()
+                print("Store loaded successfully")
+                SeedDataProvider(context: self.container.viewContext).seedIfNeeded()
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -58,9 +70,9 @@ struct PersistenceController {
 
     /// Re-run seeding (resets all data).
     func reseed() {
-        let entities = ["WordEntry", "PhraseEntry", "GrammarNote", "StudySession", "CulturalItem", "FeedbackEvent"]
         let ctx = container.viewContext
         ctx.perform {
+            let entities = ["WordEntry", "PhraseEntry", "GrammarNote", "StudySession", "CulturalItem", "FeedbackEvent"]
             for entity in entities {
                 let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
                 let delete = NSBatchDeleteRequest(fetchRequest: fetch)
@@ -68,6 +80,16 @@ struct PersistenceController {
             }
             try? ctx.save()
             SeedDataProvider(context: ctx).seedIfNeeded()
+        }
+    }
+
+    private func destroyStore() {
+        guard let storeURL = container.persistentStoreDescriptions.first?.url else { return }
+        let baseURL = storeURL.deletingLastPathComponent()
+        let storeName = storeURL.deletingPathExtension().lastPathComponent
+        let files = try? FileManager.default.contentsOfDirectory(at: baseURL, includingPropertiesForKeys: nil)
+        files?.filter { $0.lastPathComponent.contains(storeName) }.forEach {
+            try? FileManager.default.removeItem(at: $0)
         }
     }
 }
