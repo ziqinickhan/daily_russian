@@ -1193,7 +1193,63 @@ struct SeedDataProvider {
              "Phrases"),
 
             ("Talking About Myself",
-             "Key phrases for personal conversation:\n\n**Introducing**:\n• Меня́ зову́т... (My name is... — lit: they call me)\n• Я из... (+ Gen) (I'm from...)\n• Я живу́ в... (+ Prep) (I live in...)\n• Я рабо́таю... (+ Ins) (I work as...)\n\n**Likes**:\n• Мне нра́вится... (+ Nom/Inf) = I like...\n• Я люблю́... (+ Acc) = I love...\n• Я увлека́юсь... (+ Ins) = I'm into... (hobby)\n\n**About myself**:\n• Я учу́сь в университе́те (I study at university)\n• Я говорю́ по-ру́сски немно́го (I speak Russian a little)\n\n💡 \"Я говорю́ по-ру́сски\" = I speak Russian. \"По-\" prefix for language adverbs.",
+             "Key phrases for personal conversation:\n\n**Introducing**:\n• Меня́ зову́т... (My name is... — lit: they call me)\n• Я из... (+ Gen) (I'm from...)\n• Я живу́ в... (+ Prep) (I live in...)\n• Я рабо́таю... (+ Ins) (I work as...)\n\n**Likes**:\n• Мне нра́вится... (+ Nom/Inf) = I like...\n• Я люблю́... (+ Acc) = I love...\n• Я увлека́юсь... (+ Ins) = I'm into... (hobby)\n\n💡 \"Я говорю́ по-ру́сски\" = I speak Russian. \"По-\" prefix for language adverbs.",
+             "Phrases"),
+
+            ("Double Negatives",
+             "Russian REQUIRES double negatives — unlike English.\n\n**Никто́ не зна́ет** = Nobody knows (lit: nobody doesn't know)\n**Ничего́ не ви́жу** = I don't see anything (lit: I don't see nothing)\n**Нигде́ не́ был** = I haven't been anywhere (lit: I wasn't nowhere)\n\n**The rule**: If you use a negative pronoun/adverb (ничто́, никто́, никогда́, нигде́), you MUST also use **не** with the verb.\n\n💡 English says \"I never go there.\" Russian says \"Я никогда́ туда́ **не** хожу́.\" The double negative is grammatically REQUIRED — not slang!",
+             "Grammar"),
+
+            ("Ты vs Вы — Formal/Informal",
+             "Russian has two words for 'you':\n\n**Ты** (informal/singular):\n• Friends, family, children, peers\n• God, animals, yourself\n• Can be rude if used with strangers\n\n**Вы** (formal/plural):\n• Strangers, elders, bosses, officials\n• Any group of 2+ people (even friends)\n• Always capitalised in formal letters: Вы, Вас\n\n**Transition**: \"Дава́й на ты?\" = \"Let's switch to ты?\" — once someone offers this, you can use ты.\n\n💡 When in doubt, use Вы. It's safer to be too polite than too familiar.",
+             "Grammar"),
+
+            ("Diminutives — Russian's soft side",
+             "Russian adds suffixes to make words 'smaller' or more affectionate:\n\n**Nouns**:\n• дом → до́мик (little house)\n• стол → сто́лик (little table)\n• кни́га → кни́жка (little book)\n\n**Names** (affectionate):\n• А́нна → А́ня → А́нечка → Аню́та\n• Алекса́ндр → Са́ша → Са́шенька\n• Екатери́на → Ка́тя → Катю́ша\n\n**Common suffixes**: -ик, -чик, -очк(а), -еньк(а), -ушк(а)\n\n💡 Using diminutives signals warmth and friendliness. Strangers who use them too early sound creepy — it's a social signal!",
+             "Vocabulary"),
+
+            ("Telling Time",
+             "How to ask and tell time:\n\n**Asking**:\n• Кото́рый час? = What time is it?\n• Ско́лько вре́мени? = What's the time?\n\n**On the hour**:\n• Сейча́с три ча́са (It's 3 o'clock)\n• Сейча́с оди́н час (It's 1 o'clock — singular!)\n\n**Minutes past (ordinal + gen)**:\n• Пять мину́т четвёртого = 3:05 (lit: 5 minutes of the fourth)\n• Че́тверть пя́того = 4:15 (quarter of the fifth)\n• Полови́на шесто́го = 5:30 (half of the sixth)\n\n**Minutes to (без + gen)**:\n• Без пяти́ три = 2:55 (lit: three without five)\n• Без че́тверти во́семь = 7:45\n\n💡 The 'next hour' thinking: 3:10 = '10 minutes of the FOURTH hour.' The hour after the current one!",
+             "Vocabulary"),
+
+            ("Using Свой (One's Own)",
+             "**Свой** means 'one's own' — the subject's own thing:\n\n• Я люблю́ **свою́** рабо́ту (I love MY OWN job)\n• Ты взял **свою́** кни́гу? (Did you take YOUR OWN book?)\n• Он говори́т о **свое́й** семье́ (He talks about HIS OWN family)\n\n**When NOT to use свой**:\n• If the owner is NOT the subject: Я ви́жу **его́** маши́ну (I see HIS car — not mine!)\n• If using мой/твой adds clarity or emphasis\n\n💡 If the owner = the subject of the clause, use свой. It changes like any adjective: своя́, своё, свои́, своего́, etc.",
+             "Grammar"),
+
+            ("Prefix по- with Adverbs",
+             "**По-** + dative adjective = 'in the manner of':\n\n**Languages**:\n• по-ру́сски (in Russian)\n• по-англи́йски (in English)\n\n**Style/manner**:\n• по-но́вому (in a new way)\n• по-ста́рому (the old way)\n• по-мо́ему (in my opinion / my way)\n• по-тво́ему (in your opinion)\n• по-друго́му (differently)\n\n**Examples**:\n• Говори́те по-ру́сски? (Do you speak Russian?)\n• По-мо́ему, э́то не правда (In my opinion, that's not true)\n\n💡 All language adverbs use по-: по-ру́сски, по-францу́зски, по-кита́йски. The hyphen is mandatory.",
+             "Grammar"),
+
+            ("Conjunctions: А, И, Но, Или",
+             "Small words, big differences:\n\n**И = and** (simple addition):\n• Я купи́л хлеб **и** молоко́ (I bought bread AND milk)\n\n**А = and/but** (CONTRAST between two subjects):\n• Я люблю́ ко́фе, **а** она́ лю́бит чай (I like coffee AND/WHILE she likes tea)\n• NOT interchangeable with и!\n\n**Но = but** (contradiction within same subject):\n• Я хоте́л пойти́, **но** не мог (I wanted to go BUT couldn't)\n\n**И́ли = or**:\n• Ча́й **и́ли** ко́фе? (Tea or coffee?)\n\n💡 **А** is uniquely Russian — it introduces a NEW topic/subject with contrast. Use и for simple lists, а when comparing two different things.",
+             "Grammar"),
+
+            ("Participles (Quick Intro)",
+             "Participles are verbal adjectives — verbs turned into describing words:\n\n**Active present (-ущий/-ющий/-ащий/-ящий)**:\n• чита́ть → чита́ющий (reading — who is reading)\n• говори́ть → говоря́щий (speaking — who is speaking)\n\n**Active past (-вший/-ший)**:\n• сде́лать → сде́лавший (having done — who did)\n\n**Passive past (-нный/-тый)**:\n• прочита́ть → прочи́танный (read — that was read)\n• откры́ть → откры́тый (opened — that was opened)\n\n**Examples**:\n• Челове́к, чита́ющий кни́гу (The person reading the book)\n• Кни́га, прочи́танная мной (The book read by me)\n\n💡 Participles are common in writing but less in speech. For now, learn to RECOGNIZE them — you'll encounter them everywhere in Russian texts.",
+             "Grammar"),
+
+            ("Expressing 'Should Have / Could Have'",
+             "Regret and hypothetical past — crucial for real conversation:\n\n**Сле́довало + бы + perfective infinitive** = should have:\n• Тебе́ сле́довало бы сказа́ть ра́ньше (You should have said earlier)\n\n**Можно́ бы́ло + бы + perfective** = could have:\n• Мо́жно бы́ло бы позвони́ть (One could have called)\n\n**На́до бы́ло + perfective** = needed to / should have:\n• На́до бы́ло сде́лать э́то вчера́ (Should have done it yesterday)\n\n**Simple past for regret**:\n• Лучше бы я оста́лся до́ма! (I should have stayed home! / If only I'd stayed home!)\n\n💡 **Бы** is the key word for all hypotheticals. It's the Russian equivalent of 'would' — never forget it in conditional sentences.",
+             "Grammar"),
+
+            ("Instrumental for Time & Seasons",
+             "Use instrumental case for parts of the day and seasons:\n\n**No preposition needed**:\n• у́тром (in the morning)\n• днём (in the afternoon)\n• ве́чером (in the evening)\n• но́чью (at night — ends in -ью!)\n• зимо́й (in winter)\n• весно́й (in spring)\n• ле́том (in summer)\n• о́сенью (in autumn — ends in -ью!)\n\n**Usage**:\n• Я встаю́ ра́но у́тром (I wake up early in the morning)\n• Ле́том мы е́здим на да́чу (In summer we go to the dacha)\n\n💡 This is WHY you hear 'утром' and 'вечером' so often — they're instrumental case adverbs. The -ом/-ой ending IS the instrumental.",
+             "Grammar"),
+
+            ("Expressing Likes & Dislikes in Depth",
+             "Three levels of liking, each with different grammar:\n\n**Мне нра́вится + Nominative** (I like — neutral):\n• Мне нра́вится э́та му́зыка (I like this music)\n• Мне нра́вятся э́ти кни́ги (I like these books — note plural!)\n\n**Я люблю́ + Accusative** (I love — strong):\n• Я люблю́ тебя́ (I love you)\n• Я люблю́ чита́ть (I love to read — infinitive!)\n\n**Я обожа́ю + Accusative** (I adore — very strong):\n• Я обожа́ю э́тот фильм! (I adore this movie!)\n\n**Disliking**:\n• Мне не нра́вится... (I don't like — soft)\n• Я не люблю́... (I don't love — stronger)\n• Я ненави́жу... (I hate — very strong)\n\n💡 Нра́вится literally means 'is pleasing to.' The thing you like is the SUBJECT — hence the verb agrees with what you like, not with you!",
+             "Phrases"),
+
+            ("Reported Speech & Indirect Questions",
+             "How to report what someone said:\n\n**Он сказа́л, что...** (He said that...):\n• Он сказа́л, что бу́дет до́ма (He said he'd be home)\n• Она́ сказа́ла, что не зна́ет (She said she doesn't know)\n\n**Я спроси́л, где/когда́/почему́...** (I asked where/when/why...):\n• Я спроси́л, где она́ живёт (I asked where she lives)\n• Он спроси́л, почему́ я опозда́л (He asked why I was late)\n\n**Ли = whether/if** (yes/no questions):\n• Я не зна́ю, придёт ли он (I don't know whether he'll come)\n• Она́ спроси́ла, бу́ду ли я до́ма (She asked if I'd be home)\n\n💡 **Ли** always goes right after the verb in the reported clause. It turns a yes/no question into an indirect one: \"Он придёт?\" → \"...придёт ли он.\"",
+             "Grammar"),
+
+            ("Short Responses & Agreement",
+             "Sound more natural with these one-word responses:\n\n**Agreement**:\n• Да (Yes)\n• Коне́чно (Of course)\n• То́чно (Exactly / That's right)\n• Правда (True / Right)\n• Согла́сен (I agree — masculine)\n• Согла́сна (I agree — feminine)\n\n**Disagreement / Doubt**:\n• Нет (No)\n• Вря́д ли (Hardly / Doubtful)\n• Не ду́маю (I don't think so)\n• Не зна́ю (I don't know)\n• Может быть (Maybe)\n\n**Surprise**:\n• Пра́вда? (Really?)\n• Да ты что! (No way! / You're kidding!)\n• Не мо́жет быть! (It can't be!)\n\n💡 \"Да ты что!\" is extremely common and has nothing to do with 'yes you what' — it's a fixed expression of surprise.",
+             "Expression"),
+
+            ("Booking a Hotel / Checking In",
+             "Practical travel phrases:\n\n**Booking**:\n• Я хоте́л бы заброни́ровать но́мер (I'd like to book a room)\n• У вас есть свобо́дные номера́? (Do you have available rooms?)\n• На ско́лько ноче́й? (For how many nights?)\n\n**At check-in**:\n• У меня́ заброни́рован но́мер (I have a reservation)\n• Вот мой па́спорт (Here's my passport)\n• Во ско́лько за́втрак? (What time is breakfast?)\n\n**Problems**:\n• В но́мере не рабо́тает кондиционе́р (The AC doesn't work in the room)\n• Мо́жно друго́й но́мер? (Can I have another room?)\n\n💡 Но́мер means 'number' AND 'hotel room.' Кондиционе́р is 'air conditioner' — just broken English re-spelled in Cyrillic.",
              "Phrases"),
         ]
 
