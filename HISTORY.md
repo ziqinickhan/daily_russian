@@ -1,5 +1,13 @@
 # History
 
+## 2026-05-31 14:30 UTC — Grammar, reading, news overhaul + hover translation
+- Grammar: expanded to 31 notes (up from 11) with real-life conversation examples
+- Reading: 8 real-life passages (cafe, directions, doctor visit, social media, weekend plans)
+- News: 8 curated stories covering culture, sports, weather, tech, science
+- Hover-to-translate: hover any Russian word in Reading/News to see translation + jump to Vocabulary
+- RussianFlowText: shared component for interactive Russian text rendering
+- AppNavigation: cross-section navigation (hover popover → jump to Vocab)
+
 ## 2026-05-31 13:10 UTC — OpenRussian dictionary integration
 - Integrated OpenRussian.org dataset (26,983 nouns, 9,964 verbs, 5,521 adjectives)
 - 95 words now have full 12-case declension tables

@@ -1113,8 +1113,88 @@ struct SeedDataProvider {
              "Verb"),
 
             ("The Particle же",
-             "**Же** (or ж) is untranslatable but essential. It adds emphasis — like \"but\" or \"after all\" or \"the very same.\"\n\n**Uses:**\n1. **Contrast**: Я же говори́л! (But I told you! / I did say that!)\n2. **Identity**: Така́я же (the same kind), Тот же (the same one)\n3. **Softer requests**: Иди́ же сюда́! (Come here, would you?)\n4. **After all / actually**: Сего́дня же пятница! (But it's Friday today! — as a reason to relax)\n\n💡 **No direct translation** — listen for it in native speech and you'll hear it everywhere. It's one of those words that makes your Russian sound natural.",
+             "**Же** (or ж) is untranslatable but essential. It adds emphasis — like \"but\" or \"after all\" or \"the very same.\"\n\n**Uses:**\n1. **Contrast**: Я же говори́л! (But I told you! / I did say that!)\n2. **Identity**: Така́я же (the same kind), Тот же (the same one)\n3. **Softer requests**: Иди́ же сюда́! (Come here, would you?)\n4. **After all / actually**: Сего́дня же пятница! (But it's Friday today!)\n\n💡 No direct translation — listen for it in native speech.",
              "Expression"),
+
+            ("У меня есть — Possession",
+             "Russian doesn't use \"to have.\" Instead: **У + Genitive + есть + Nominative**.\n\n**Structure**: У меня́ (at me) есть маши́на (exists a car) = I have a car.\n\n**Examples:**\n• У меня́ есть брат (I have a brother)\n• У тебя́ есть вре́мя? (Do you have time?)\n• У него́ нет де́нег (He doesn't have money — note: нет + Genitive!)\n• У нас бы́л план (We had a plan)\n\n💡 **Нет** (= there isn't) always uses Genitive. \"У меня есть вода\" → \"У меня нет воды́\".",
+             "Grammar"),
+
+            ("Expressing Need: на́до, ну́жно, до́лжен",
+             "Three ways to say \"need to\" — different flavors:\n\n1. **На́до + Dative** — general necessity / impersonal\n• Мне на́до идти́ (I need to go)\n• Ей на́до рабо́тать (She needs to work)\n\n2. **Ну́жно + Dative** — more specific need\n• Мне ну́жна по́мощь (I need help — literally: help is needed to me)\n• Тебе́ ну́жен слова́рь? (Do you need a dictionary?)\n\n3. **До́лжен + Nom (adj)** — personal obligation, \"should\"\n• Я до́лжен зако́нчить (I must finish)\n• Ты не до́лжен э́того де́лать (You shouldn't do this)\n\n💡 На́до/ну́жно = impersonal; до́лжен = personal moral obligation.",
+             "Grammar"),
+
+            ("Time Expressions: Instrumental & Accusative",
+             "How to say WHEN something happens:\n\n**Instrumental case** (no preposition):\n• у́тром (in the morning)\n• днём (in the afternoon)\n• ве́чером (in the evening)\n• но́чью (at night)\n• зимо́й (in winter), ле́том (in summer)\n\n**В + Accusative** (days of week):\n• в понеде́льник (on Monday)\n• в сре́ду (on Wednesday)\n• в суббо́ту (on Saturday)\n\n**В + Prepositional** (months):\n• в январе́ (in January)\n• в ма́рте (in March)\n\n💡 No preposition for seasons/time of day — it's baked into the instrumental ending!",
+             "Grammar"),
+
+            ("Numbers & Noun Agreement",
+             "Numbers make the noun change case:\n\n**1 → Nominative singular**: оди́н стол (one table)\n**2-4 → Genitive singular**: два стола́, три стола́ (2, 3 tables)\n**5+ → Genitive plural**: пять столо́в, мно́го столо́в (5, many tables)\n\n**Compound numbers follow the last digit:**\n• два́дцать оди́н стол (21 tables — ends in 1!)\n• два́дцать два стола́ (22 tables — ends in 2!)\n• два́дцать пять столо́в (25 tables — ends in 5!)\n\n💡 This changes constantly in conversation — practice it every time you count or buy anything.",
+             "Grammar"),
+
+            ("Short Adjectives",
+             "Adjectives have SHORT forms used as predicates:\n\n**Long form**: Э́то краси́вая де́вушка (This is a beautiful girl)\n**Short form**: Э́та де́вушка краси́ва (This girl is beautiful)\n\n**Short form endings:**\n• Masc: -∅ (ну́жен, краси́в)\n• Fem: -а (нужна́, краси́ва)\n• Neut: -о (ну́жно, краси́во)\n• Plural: -ы/-и (нужны́, краси́вы)\n\n💡 Short forms feel more temporary/current. Long forms feel more permanent/characteristic. \"Он злой\"=\"He's angry (right now)\" vs \"Он злой челове́к\"=\"He's an angry person.\"",
+             "Adjective"),
+
+            ("Comparatives & Superlatives",
+             "Making comparisons:\n\n**Simple comparative (-ее)**:\n• краси́вый → краси́вее (more beautiful)\n• бы́стрый → быстре́е (faster)\n• интере́сный → интере́снее (more interesting)\n\n**Irregular comparatives (memorize!):**\n• хоро́ший → лу́чше (better)\n• плохо́й → ху́же (worse)\n• большо́й → бо́льше (bigger)\n• ма́ленький → ме́ньше (smaller)\n\n**Comparative + чем + Nom, OR + Genitive**:\n• Он вы́ше, чем я = Он вы́ше меня́ (He is taller than me)\n\n**Superlative (са́мый + adj)**:\n• са́мый краси́вый (the most beautiful)\n• са́мый лу́чший (the best)\n\n💡 Use \"чем\" after the comparative for the word \"than.\"",
+             "Adjective"),
+
+            ("-то vs -нибудь Particles",
+             "Both mean \"some-\", but different:\n\n**-то**: something/someone SPECIFIC but unknown to speaker\n• Кто-то звони́л (Someone called — I don't know who but it was a specific person)\n• Где-то здесь (Somewhere around here — I know it's nearby)\n\n**-нибудь**: any, no matter which\n• Кто́-нибудь зна́ет? (Does anyone know? — any person at all)\n• Дай мне что́-нибудь (Give me something — anything will do)\n\n💡 **-то** = I have someone specific in mind. **-нибудь** = it doesn't matter which one.",
+             "Grammar"),
+
+            ("Impersonal Sentences",
+             "Russian loves impersonal constructions — no subject!\n\n**Мне + Adverb/Verb**:\n• Мне хо́лодно (I'm cold — lit: [it is] cold to me)\n• Мне жа́рко (I'm hot)\n• Мне ску́чно (I'm bored)\n• Мне больно (It hurts — I'm in pain)\n• Тебе́ ви́дно? (Can you see? — lit: is it visible to you?)\n\n**No English \"I\" — Dative instead:**\n• Мне нра́вится = I like (lit: it pleases me)\n• Мне ну́жно = I need (lit: it is needed to me)\n• Мне хо́чется = I feel like (lit: it wants itself to me)\n\n💡 This is one of the most Russian things about Russian. Embrace the dative!",
+             "Grammar"),
+
+            ("Conditionals: е́сли & бы",
+             "How to say \"if\" and \"would\":\n\n**Real condition (е́сли + present)**:\n• Е́сли хо́чешь, пойдём (If you want, let's go)\n• Е́сли бу́дет дождь, я оста́нусь до́ма (If it rains, I'll stay home)\n\n**Hypothetical (е́сли бы + past)**:\n• Е́сли бы я знал... (If I knew / had known...)\n• Е́сли бы у меня́ бы́ло вре́мя... (If I had the time...)\n• Е́сли бы он сказа́л ра́ньше! (If only he had said earlier!)\n\n💡 **Бы** goes after the verb (or first word). It marks the hypothetical mood — never use it for real conditions.",
+             "Grammar"),
+
+            ("Days of the Week",
+             "All masculine except среда́, пя́тница, суббо́та (fem).\n\nпонеде́льник (Mon), вто́рник (Tue), среда́ (Wed)\nчетве́рг (Thu), пя́тница (Fri), суббо́та (Sat), воскресе́нье (Sun)\n\n**Usage**:\n• в понеде́льник (on Monday — Accusative)\n• по понеде́льникам (on Mondays — Dative plural)\n• с понеде́льника (from Monday — Genitive)\n• до пя́тницы (until Friday — Genitive)\n\n💡 Среда́ means both \"Wednesday\" AND \"environment/medium\". Context tells you which.",
+             "Vocabulary"),
+
+            ("Instrumental Case for Professions",
+             "Use Instrumental after быть (to be) — past and future:\n\n• Я был студе́нтом (I was a student — Ins)\n• Я бу́ду врачо́м (I will be a doctor — Ins)\n• Она́ была́ учи́тельницей (She was a teacher — Ins)\n\n**But present tense: Nominative!**\n• Я студе́нт (I am a student — Nom)\n• Он врач (He is a doctor — Nom)\n\n💡 No verb \"to be\" in present tense → Nominative. Быть + past/future → Instrumental.",
+             "Grammar"),
+
+            ("Expressing Age: Мне ... лет",
+             "Russian uses Dative + Genitive for age:\n\n**Мне 20 лет** = I'm 20 years old (lit: to me [there are] 20 years)\n\n**лет vs год vs го́да**:\n• 1 год (1 — ends in 1 → год)\n• 2-4 го́да (2,3,4 — Gen sing → го́да)\n• 5-20 лет (5+ — Gen pl → лет)\n• 21 год (ends in 1!), 22 го́да (ends in 2!)\n\n**Examples**:\n• Мне 31 год (I'm 31)\n• Ей 5 лет (She's 5)\n• Ему́ 22 го́да (He's 22)\n\n💡 The word \"лет\" is the genitive plural of \"год\". It literally means \"of years.\"",
+             "Grammar"),
+
+            ("Weather Talk",
+             "How Russians talk about weather:\n\n**Impersonal (adverb)**:\n• Хо́лодно (It's cold) • Жа́рко (It's hot)\n• Тепло́ (It's warm) • Прохла́дно (It's cool)\n\n**With verbs**:\n• Идёт дождь (It's raining — lit: rain goes)\n• Идёт снег (It's snowing)\n• Све́тит со́лнце (The sun is shining)\n\n**Seasons — instrumental**:\n• зимо́й (in winter) • ле́том (in summer)\n• весной (in spring) • о́сенью (in autumn)\n\n💡 \"На у́лице\" = \"outside\" is often added: На у́лице хо́лодно (It's cold outside).",
+             "Vocabulary"),
+
+            ("Colors in Russian",
+             "Basic colors with gender forms:\n\nкра́сный — red        си́ний — dark blue\nзелёный — green        жёлтый — yellow\nбе́лый — white        чёрный — black\nголубо́й — light blue    се́рый — gray\nкори́чневый — brown    ора́нжевый — orange\n\n**Usage note**: Light blue (голубо́й) and dark blue (си́ний) are DIFFERENT colors in Russian — not shades of the same color. Russians perceive them as distinct!\n\n💡 Adjectives describing colors follow the same gender/case rules as all adjectives.",
+             "Vocabulary"),
+
+            ("Ordering at a Restaurant",
+             "Key phrases for restaurants and cafes:\n\n**Arriving**:\n• У вас есть свобо́дный стол? (Do you have a free table?)\n• Мо́жно меню́? (May I have the menu?)\n\n**Ordering**:\n• Я бу́ду... (+ Acc) = I'll have... (Я бу́ду борщ)\n• Принеси́те, пожа́луйста... = Please bring...\n• Мне, пожа́луйста... = I'd like... (polite)\n\n**Paying**:\n• Счёт, пожа́луйста (The bill, please)\n• Мо́жно картой? (Can I pay by card?)\n• Ско́лько с меня́? (How much do I owe?)\n\n💡 Russians don't say \"I'll have the...\" — use Я бу́ду (lit: I will be) or Мне (to me).",
+             "Phrases"),
+
+            ("Asking for Directions",
+             "Essential direction phrases:\n\n**Questions**:\n• Где нахо́дится...? (Where is... located?)\n• Как пройти́ к...? (How to get to...?)\n• Э́то далеко́? (Is it far?)\n• Вы не зна́ете, где...? (Do you happen to know where...? — the \"не\" makes it MORE polite!)\n\n**Directions you'll hear**:\n• иди́те пря́мо (go straight)\n• поверни́те нале́во/напра́во (turn left/right)\n• на углу́ (on the corner)\n• ря́дом с... (+ Ins) (next to...)\n• напро́тив... (+ Gen) (across from...)\n\n💡 \"Вы не зна́ете...\" with the negative is more polite than just \"Вы зна́ете...\". Classic Russian softener.",
+             "Phrases"),
+
+            ("Word Order Flexibility",
+             "Russian word order is flexible — but it changes EMPHASIS:\n\n**Neutral (Subject-Verb-Object)**:\n• Я чита́ю кни́гу (I'm reading a book — neutral)\n\n**Emphasize the object**:\n• Кни́гу я чита́ю (It's the BOOK I'm reading — not a magazine)\n\n**Emphasize the action**:\n• Чита́ю я кни́гу (I AM reading the book — not ignoring it)\n\n**New information goes last**:\n• В ко́мнату вошёл челове́к (A MAN entered the room — what matters is who)\n• Челове́к вошёл в ко́мнату (The man entered THE ROOM — what matters is where)\n\n💡 When speaking, put the new/important info at the END. This is why \"У меня́ есть...\" puts the possessed object last.",
+             "Grammar"),
+
+            ("Common Fillers & Connectors",
+             "Sound more natural with these:\n\n**Fillers**:\n• ну... (well... so...)\n• э́то са́мое (what's it called... that thing...)\n• ти́па (like... sort of...)\n• коро́че (in short... anyway...)\n\n**Connectors**:\n• кста́ти (by the way)\n• кро́ме того́ (besides / moreover)\n• то́ есть (that is / i.e.)\n• в о́бщем (generally / overall)\n• на са́мом де́ле (actually / in fact)\n• по кра́йней ме́ре (at least)\n\n💡 Russians use \"ну\" ALL the time. It's like English \"well,\" \"so,\" \"um\" — just softer.",
+             "Expression"),
+
+            ("Making Requests Politely",
+             "Russian softeners make demands into requests:\n\n**Мо́жно + Infinitive?** (May I?):\n• Мо́жно войти́? (May I come in?)\n• Мо́жно взять? (May I take it?)\n\n**Не + могу/мог/могла + ли + бы** (Could you?):\n• Не могли́ бы вы помочь? (Could you help? — very polite!)\n• Не мог бы ты закры́ть окно́? (Could you close the window?)\n\n**Дава́й/Дава́йте + verb**:\n• Дава́йте познако́мимся! (Let's get acquainted!)\n• Дава́й пойдём! (Let's go!)\n\n💡 Starting with \"Не могли бы вы...\" transforms a command into the politest possible request.",
+             "Phrases"),
+
+            ("Talking About Myself",
+             "Key phrases for personal conversation:\n\n**Introducing**:\n• Меня́ зову́т... (My name is... — lit: they call me)\n• Я из... (+ Gen) (I'm from...)\n• Я живу́ в... (+ Prep) (I live in...)\n• Я рабо́таю... (+ Ins) (I work as...)\n\n**Likes**:\n• Мне нра́вится... (+ Nom/Inf) = I like...\n• Я люблю́... (+ Acc) = I love...\n• Я увлека́юсь... (+ Ins) = I'm into... (hobby)\n\n**About myself**:\n• Я учу́сь в университе́те (I study at university)\n• Я говорю́ по-ру́сски немно́го (I speak Russian a little)\n\n💡 \"Я говорю́ по-ру́сски\" = I speak Russian. \"По-\" prefix for language adverbs.",
+             "Phrases"),
         ]
 
         for entry in notes {

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var navigation = AppNavigation()
+
     var body: some View {
         Group {
             #if os(iOS)
@@ -12,6 +14,7 @@ struct ContentView: View {
             #endif
         }
         .modifier(SeedOnAppear())
+        .environmentObject(navigation)
     }
 }
 
