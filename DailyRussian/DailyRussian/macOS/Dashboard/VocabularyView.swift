@@ -17,26 +17,25 @@ struct VocabularyView: View {
     )
     private var words: FetchedResults<WordEntry>
 
-    @State private var selectedWord: WordEntry?
+    @State private var selectedWordID: UUID?
     @State private var searchText = ""
     @State private var selectedTag: String? = nil
 
     private let tts = TTSProvider()
 
-    // MARK: - Tags derived from partOfSpeech
+    // MARK: - Tags
 
-    var tags: [String] {
-        var set = Set<String>()
+    var tags: [(name: String, count: Int)] {
+        var counts: [String: Int] = [:]
         for w in words {
-            let tag = tagFor(w)
-            if !tag.isEmpty { set.insert(tag) }
+            let t = tagFor(w)
+            if !t.isEmpty { counts[t, default: 0] += 1 }
         }
-        return ["All"] + Array(set).sorted()
+        return [("All", words.count)] + counts.sorted(by: { $0.key < $1.key }).map { ($0.key, $0.value) }
     }
 
     func tagFor(_ word: WordEntry) -> String {
         guard let pos = word.partOfSpeech else { return "" }
-        // Extract broad category from partOfSpeech
         if pos.hasPrefix("noun") { return "noun" }
         if pos.hasPrefix("verb") { return "verb" }
         if pos.hasPrefix("adjective") || pos.hasPrefix("adj") { return "adjective" }
@@ -50,96 +49,154 @@ struct VocabularyView: View {
 
     var filteredWords: [WordEntry] {
         var result = Array(words)
-
         if !searchText.isEmpty {
             result = result.filter {
                 ($0.word ?? "").localizedCaseInsensitiveContains(searchText) ||
                 ($0.translation ?? "").localizedCaseInsensitiveContains(searchText)
             }
         }
-
         if let tag = selectedTag, tag != "All" {
             result = result.filter { tagFor($0) == tag }
         }
-
         return result
+    }
+
+    // Resolve selected word from UUID (avoids NSManagedObject selection conflicts)
+    var selectedWord: WordEntry? {
+        guard let id = selectedWordID else { return nil }
+        return words.first { $0.id == id }
     }
 
     // MARK: - Body
 
     var body: some View {
-        HStack(spacing: 0) {
-            // Tag sidebar
-            tagSidebar
+        VStack(spacing: 0) {
+            // Search + tag filter bar
+            HStack(spacing: 8) {
+                TextField("Search...", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 200)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(tags, id: \.name) { tag in
+                            TagPill(
+                                name: tag.name,
+                                count: tag.count,
+                                isSelected: selectedTag == tag.name || (tag.name == "All" && selectedTag == nil)
+                            )
+                            .onTapGesture {
+                                selectedTag = (tag.name == "All") ? nil : tag.name
+                                selectedWordID = nil
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 8)
+                }
+
+                Spacer()
+                Text("\(filteredWords.count) words")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(10)
+            .background(.bar)
 
             Divider()
 
-            // Word list
-            wordList
+            // Main area: word list + detail
+            if filteredWords.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.largeTitle)
+                        .foregroundStyle(.secondary)
+                    Text("No words found")
+                        .font(.headline)
+                    if words.isEmpty {
+                        Button("Load Vocabulary") {
+                            PersistenceController.shared.reseed()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                HSplitView {
+                    // Word list
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredWords, id: \.id) { word in
+                                WordRow(
+                                    word: word,
+                                    isSelected: selectedWordID == word.id,
+                                    tts: tts
+                                )
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    selectedWordID = word.id
+                                }
+                                Divider()
+                            }
+                        }
+                    }
+                    .frame(minWidth: 220, idealWidth: 280)
 
-            Divider()
-
-            // Detail panel
-            detailPanel
+                    // Detail panel
+                    if let word = selectedWord {
+                        WordDetailView(word: word, tts: tts)
+                            .frame(minWidth: 300)
+                    } else {
+                        VStack(spacing: 12) {
+                            Image(systemName: "character.book.closed")
+                                .font(.largeTitle)
+                                .foregroundStyle(.secondary)
+                            Text("Select a word")
+                                .font(.headline)
+                            Text("Click any word to see its meaning, pronunciation, and case forms.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+            }
         }
         .navigationTitle("Vocabulary")
     }
+}
 
-    // MARK: - Tag Sidebar
+// MARK: - Tag Pill
 
-    private var tagSidebar: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            TextField("Search...", text: $searchText)
-                .textFieldStyle(.roundedBorder)
-                .padding(8)
+struct TagPill: View {
+    let name: String
+    let count: Int
+    let isSelected: Bool
 
-            Divider()
-
-            List(tags, id: \.self, selection: $selectedTag) { tag in
-                HStack {
-                    Text(tag)
-                        .font(.callout)
-                    Spacer()
-                    if tag == "All" {
-                        Text("\(words.count)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text("\(words.filter { tagFor($0) == tag }.count)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 2)
-                .tag(tag as String?)
-            }
-            .listStyle(.sidebar)
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(name)
+                .font(.caption2)
+            Text("\(count)")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
-        .frame(width: 150)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(isSelected ? Color.accentColor : Color.gray.opacity(0.15))
+        .foregroundStyle(isSelected ? .white : .primary)
+        .clipShape(Capsule())
     }
+}
 
-    // MARK: - Word List
+// MARK: - Word Row
 
-    private var wordList: some View {
-        Group {
-            if filteredWords.isEmpty {
-                ContentUnavailableView(
-                    "No words",
-                    systemImage: "magnifyingglass",
-                    description: Text(searchText.isEmpty ? "Seed data may not have loaded." : "Try a different search.")
-                )
-            } else {
-                List(filteredWords, selection: $selectedWord) { word in
-                    wordRow(word)
-                        .tag(word as WordEntry?)
-                }
-                .listStyle(.inset)
-            }
-        }
-        .frame(width: 250)
-    }
+struct WordRow: View {
+    let word: WordEntry
+    let isSelected: Bool
+    let tts: TTSProvider
 
-    private func wordRow(_ word: WordEntry) -> some View {
+    var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(word.word ?? "")
@@ -158,12 +215,6 @@ struct VocabularyView: View {
                     .font(.caption)
             }
 
-            if let nextReview = word.nextReview, nextReview <= Date() {
-                Image(systemName: "clock.badge.exclamationmark")
-                    .foregroundStyle(.orange)
-                    .font(.caption)
-            }
-
             Button {
                 tts.speak(word.word ?? "")
             } label: {
@@ -171,120 +222,120 @@ struct VocabularyView: View {
             }
             .buttonStyle(.borderless)
         }
-        .padding(.vertical, 1)
-    }
-
-    // MARK: - Detail Panel
-
-    @ViewBuilder
-    private var detailPanel: some View {
-        if let word = selectedWord {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Word + pronunciation
-                    HStack {
-                        Text(word.word ?? "")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-
-                        Button {
-                            tts.speak(word.word ?? "")
-                        } label: {
-                            Image(systemName: "speaker.wave.2.circle.fill")
-                                .font(.title2)
-                        }
-                        .buttonStyle(.plain)
-
-                        Spacer()
-                    }
-
-                    // Translation — always visible
-                    Text(word.translation ?? "")
-                        .font(.title3)
-                        .foregroundStyle(.primary)
-
-                    // Part of speech
-                    if let pos = word.partOfSpeech {
-                        HStack(spacing: 8) {
-                            Text(tagFor(word))
-                                .font(.caption)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(.blue.opacity(0.1), in: Capsule())
-                            Text(pos)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-
-                    // Note
-                    if let note = word.note {
-                        HStack(spacing: 6) {
-                            Image(systemName: "info.circle")
-                                .font(.caption)
-                            Text(note)
-                                .font(.caption)
-                        }
-                        .foregroundStyle(.orange)
-                    }
-
-                    // Case forms
-                    if let caseJSON = word.caseForms,
-                       let data = caseJSON.data(using: .utf8),
-                       let cases = try? JSONDecoder().decode([String: String].self, from: data),
-                       !cases.isEmpty {
-                        Divider()
-                        Text("Case Forms")
-                            .font(.headline)
-
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                            ForEach(caseKeys.sorted(), id: \.self) { key in
-                                if let form = cases[key] {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(caseLabel(key))
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                        Text(form)
-                                            .font(.callout)
-                                            .fontWeight(.medium)
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            }
-                        }
-                    }
-
-                    // Spaced repetition stats
-                    if word.reviewCount > 0 {
-                        Divider()
-                        Text("Review Stats")
-                            .font(.headline)
-                        HStack(spacing: 16) {
-                            Label("Reviews: \(word.reviewCount)", systemImage: "arrow.triangle.merge")
-                            Label("Ease: \(String(format: "%.1f", word.easeFactor))", systemImage: "gauge.with.dots.needle.bottom.0percent")
-                            Label("Interval: \(String(format: "%.1f", word.reviewInterval))d", systemImage: "clock")
-                        }
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    }
-
-                    Spacer()
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        } else {
-            ContentUnavailableView(
-                "Select a word",
-                systemImage: "character.book.closed",
-                description: Text("Click any word to see its meaning and case forms.")
-            )
-            .frame(maxWidth: .infinity)
-        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear)
     }
 }
 
-// MARK: - Case Helpers
+// MARK: - Word Detail
+
+struct WordDetailView: View {
+    let word: WordEntry
+    let tts: TTSProvider
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                // Word + pronunciation
+                HStack {
+                    Text(word.word ?? "")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                    Button {
+                        tts.speak(word.word ?? "")
+                    } label: {
+                        Image(systemName: "speaker.wave.2.circle.fill")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+
+                Text(word.translation ?? "")
+                    .font(.title3)
+
+                if let pos = word.partOfSpeech {
+                    HStack(spacing: 8) {
+                        tagBadge(pos)
+                        Text(pos)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if let note = word.note {
+                    Label(note, systemImage: "info.circle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+
+                // Case declensions
+                if let caseJSON = word.caseForms,
+                   let data = caseJSON.data(using: .utf8),
+                   let cases = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+                   !cases.isEmpty {
+                    Divider()
+                    Text("Case Forms")
+                        .font(.headline)
+
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 8) {
+                        ForEach(caseKeys, id: \.self) { key in
+                            if let form = cases[key] {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(caseLabel(key))
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    Text(form)
+                                        .font(.callout)
+                                        .fontWeight(.medium)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                }
+
+                if word.reviewCount > 0 {
+                    Divider()
+                    Text("Review Stats")
+                        .font(.headline)
+                    HStack(spacing: 16) {
+                        Label("Reviews: \(word.reviewCount)", systemImage: "arrow.triangle.merge")
+                        Label("Ease: \(String(format: "%.1f", word.easeFactor))", systemImage: "gauge.with.dots.needle.bottom.0percent")
+                        Label("Interval: \(String(format: "%.1f", word.reviewInterval))d", systemImage: "clock")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    func tagBadge(_ pos: String) -> some View {
+        let tag: String = {
+            if pos.hasPrefix("noun") { return "noun" }
+            if pos.hasPrefix("verb") { return "verb" }
+            if pos.hasPrefix("adjective") { return "adj" }
+            if pos.hasPrefix("adverb") { return "adv" }
+            if pos.hasPrefix("number") { return "num" }
+            return "other"
+        }()
+        return Text(tag)
+            .font(.caption)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(.blue.opacity(0.1), in: Capsule())
+    }
+}
+
+// MARK: - Helpers
 
 private let caseKeys = ["nom", "gen", "dat", "acc", "ins", "prep", "pl_nom", "pl_gen", "pl_dat"]
 
