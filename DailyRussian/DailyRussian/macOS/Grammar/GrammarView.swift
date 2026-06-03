@@ -16,6 +16,7 @@ struct GrammarView: View {
     @State private var selectedNoteID: UUID?
     @State private var searchText = ""
     @State private var selectedTag: String? = nil
+    @FocusState private var isSearchFocused: Bool
 
     // Distinct tags with counts
     var tags: [(name: String, count: Int)] {
@@ -51,6 +52,7 @@ struct GrammarView: View {
                 TextField("Search grammar notes...", text: $searchText)
                     .textFieldStyle(.roundedBorder)
                     .padding(10)
+                    .focused($isSearchFocused)
 
                 // Tag filter pills
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -137,6 +139,11 @@ struct GrammarView: View {
             }
         }
         .navigationTitle("Grammar")
+        .background(
+            Button("") { isSearchFocused = true }
+                .keyboardShortcut("f", modifiers: .command)
+                .opacity(0)
+        )
     }
 
     private func noteRow(_ note: GrammarNote) -> some View {

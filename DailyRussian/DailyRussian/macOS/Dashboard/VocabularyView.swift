@@ -21,6 +21,7 @@ struct VocabularyView: View {
     @State private var selectedWordID: UUID?
     @State private var searchText = ""
     @State private var selectedTag: String? = nil
+    @FocusState private var isSearchFocused: Bool
 
     private let tts = TTSProvider()
 
@@ -77,6 +78,7 @@ struct VocabularyView: View {
                 TextField("Search...", text: $searchText)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 200)
+                    .focused($isSearchFocused)
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
@@ -165,6 +167,11 @@ struct VocabularyView: View {
             }
         }
         .navigationTitle("Vocabulary")
+        .background(
+            Button("") { isSearchFocused = true }
+                .keyboardShortcut("f", modifiers: .command)
+                .opacity(0)
+        )
         .onReceive(navigation.$navigateToVocabWithWord) { wordID in
             if let id = wordID {
                 selectedWordID = id
