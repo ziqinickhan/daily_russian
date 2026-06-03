@@ -106,6 +106,7 @@ struct GrammarView: View {
                             }
                         }
                     }
+                    .keyboardNavigable(selectedID: $selectedNoteID, itemIDs: filteredNotes.compactMap { $0.id })
                 }
             }
             .frame(minWidth: 300, idealWidth: 340)

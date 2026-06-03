@@ -45,6 +45,7 @@ struct NewsView: View {
                 }
             }
             .frame(width: 220)
+            .keyboardNavigable(selectedID: $selectedStoryID, itemIDs: stories.map { $0.id })
             .navigationTitle("News")
 
             Divider()

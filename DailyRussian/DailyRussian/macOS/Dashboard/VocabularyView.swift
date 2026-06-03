@@ -141,6 +141,7 @@ struct VocabularyView: View {
                         }
                     }
                     .frame(minWidth: 220, idealWidth: 280)
+                    .keyboardNavigable(selectedID: $selectedWordID, itemIDs: filteredWords.compactMap { $0.id })
 
                     // Detail panel
                     if let word = selectedWord {

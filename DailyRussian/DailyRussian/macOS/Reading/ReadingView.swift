@@ -53,6 +53,7 @@ struct ReadingView: View {
                 }
             }
             .frame(width: 220)
+            .keyboardNavigable(selectedID: $selectedTextID, itemIDs: texts.map { $0.id })
             .navigationTitle("Reading")
 
             Divider()
