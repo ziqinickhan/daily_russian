@@ -8,6 +8,7 @@ struct KeyboardNavigable: ViewModifier {
     func body(content: Content) -> some View {
         content
             .focusable()
+            .focusEffectDisabled()
             .onMoveCommand { direction in
                 guard !itemIDs.isEmpty else { return }
                 let currentIndex: Int
