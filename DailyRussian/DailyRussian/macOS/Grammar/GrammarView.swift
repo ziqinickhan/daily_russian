@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreData
 
-/// Grammar reference — flat list of all notes with tag pills, tap for detail.
+/// Grammar reference — searchable, filterable flat list with tag pills, tap for detail.
 struct GrammarView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -11,48 +11,104 @@ struct GrammarView: View {
             NSSortDescriptor(keyPath: \GrammarNote.title, ascending: true)
         ]
     )
-    private var notes: FetchedResults<GrammarNote>
+    private var allNotes: FetchedResults<GrammarNote>
 
     @State private var selectedNoteID: UUID?
+    @State private var searchText = ""
+    @State private var selectedTag: String? = nil
+
+    // Distinct tags with counts
+    var tags: [(name: String, count: Int)] {
+        var counts: [String: Int] = [:]
+        for n in allNotes { counts[n.category ?? "?", default: 0] += 1 }
+        return [("All", allNotes.count)] + counts.sorted(by: { $0.key < $1.key }).map { ($0.key, $0.value) }
+    }
+
+    var filteredNotes: [GrammarNote] {
+        var result = Array(allNotes)
+        if !searchText.isEmpty {
+            result = result.filter {
+                ($0.title ?? "").localizedCaseInsensitiveContains(searchText) ||
+                ($0.content ?? "").localizedCaseInsensitiveContains(searchText)
+            }
+        }
+        if let tag = selectedTag, tag != "All" {
+            result = result.filter { $0.category == tag }
+        }
+        return result
+    }
 
     var selectedNote: GrammarNote? {
         guard let id = selectedNoteID else { return nil }
-        return notes.first { $0.id == id }
+        return allNotes.first { $0.id == id }
     }
 
     var body: some View {
         HStack(spacing: 0) {
-            // Flat list of all notes
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(notes, id: \.id) { note in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text(note.title ?? "")
-                                    .font(.headline)
-                                Spacer()
-                                TagBadge(category: note.category ?? "")
+            // Note list with search + filter
+            VStack(spacing: 0) {
+                // Search bar
+                TextField("Search grammar notes...", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(10)
+
+                // Tag filter pills
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(tags, id: \.name) { tag in
+                            Button {
+                                selectedTag = (tag.name == "All") ? nil : tag.name
+                                selectedNoteID = nil
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Text(tag.name)
+                                        .font(.caption)
+                                    Text("\(tag.count)")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(
+                                    (selectedTag == tag.name || (tag.name == "All" && selectedTag == nil))
+                                        ? tagColor(tag.name)
+                                        : Color.gray.opacity(0.12)
+                                )
+                                .foregroundStyle(
+                                    (selectedTag == tag.name || (tag.name == "All" && selectedTag == nil))
+                                        ? .white
+                                        : .primary
+                                )
+                                .clipShape(Capsule())
                             }
-                            Text(firstLine(of: note.content ?? ""))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(2)
+                            .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            selectedNoteID == note.id
-                                ? Color.accentColor.opacity(0.1)
-                                : Color.clear
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture { selectedNoteID = note.id }
-                        Divider().padding(.leading, 12)
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .padding(.bottom, 8)
+
+                Divider()
+
+                // Note list
+                if filteredNotes.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "magnifyingglass").font(.largeTitle).foregroundStyle(.secondary)
+                        Text("No notes match").font(.headline)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredNotes, id: \.id) { note in
+                                noteRow(note)
+                                Divider().padding(.leading, 12)
+                            }
+                        }
                     }
                 }
             }
-            .frame(minWidth: 280, idealWidth: 320)
+            .frame(minWidth: 300, idealWidth: 340)
 
             Divider()
 
@@ -61,14 +117,10 @@ struct GrammarView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(note.title ?? "")
-                                .font(.title2)
-                                .fontWeight(.bold)
+                            Text(note.title ?? "").font(.title2).fontWeight(.bold)
                             Spacer()
                             TagBadge(category: note.category ?? "")
                         }
-
-                        // Render content with markdown-like formatting
                         renderContent(note.content ?? "")
                     }
                     .padding(24)
@@ -76,14 +128,9 @@ struct GrammarView: View {
                 }
             } else {
                 VStack(spacing: 12) {
-                    Image(systemName: "book.pages")
-                        .font(.largeTitle)
-                        .foregroundStyle(.secondary)
-                    Text("Select a grammar note")
-                        .font(.headline)
-                    Text("All 45 notes are shown on the left — tap any to read.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Image(systemName: "book.pages").font(.largeTitle).foregroundStyle(.secondary)
+                    Text("Select a grammar note").font(.headline)
+                    Text("\(allNotes.count) notes — search, filter by tag, or scroll to browse.").font(.caption).foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -91,48 +138,71 @@ struct GrammarView: View {
         .navigationTitle("Grammar")
     }
 
+    private func noteRow(_ note: GrammarNote) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(note.title ?? "").font(.headline)
+                Spacer()
+                TagBadge(category: note.category ?? "")
+            }
+            Text(firstLine(of: note.content ?? ""))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(selectedNoteID == note.id ? Color.accentColor.opacity(0.1) : Color.clear)
+        .contentShape(Rectangle())
+        .onTapGesture { selectedNoteID = note.id }
+    }
+
     private func firstLine(of text: String) -> String {
-        text.components(separatedBy: .newlines).first { !$0.isEmpty && !$0.hasPrefix("**") } ?? text
+        text.components(separatedBy: .newlines)
+            .first { !$0.isEmpty && !$0.hasPrefix("**") } ?? text
     }
 
     @ViewBuilder
     private func renderContent(_ text: String) -> some View {
-        let lines = text.components(separatedBy: "\n")
-        ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
+        ForEach(Array(text.components(separatedBy: "\n").enumerated()), id: \.offset) { _, line in
             let trimmed = line.trimmingCharacters(in: .whitespaces)
             if trimmed.isEmpty {
                 Spacer().frame(height: 4)
-            } else if trimmed.hasPrefix("**") && trimmed.hasSuffix(":**") {
+            } else if trimmed.hasPrefix("**"), trimmed.hasSuffix(":**") {
                 Text(trimmed.replacingOccurrences(of: "**", with: ""))
-                    .font(.headline)
-                    .padding(.top, 8)
+                    .font(.headline).padding(.top, 8)
             } else if trimmed.hasPrefix("💡") {
                 HStack(alignment: .top, spacing: 6) {
                     Text("💡").font(.callout)
                     Text(String(trimmed.dropFirst(2)).trimmingCharacters(in: .whitespaces))
-                        .font(.callout)
-                        .italic()
-                        .foregroundStyle(.orange)
+                        .font(.callout).italic().foregroundStyle(.orange)
                 }
-                .padding(.vertical, 4)
-                .padding(.horizontal, 10)
+                .padding(.vertical, 4).padding(.horizontal, 10)
                 .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
             } else if trimmed.hasPrefix("•") {
                 HStack(alignment: .top, spacing: 8) {
                     Text("•").font(.body).foregroundStyle(.secondary)
-                    Text(String(trimmed.dropFirst(1)).trimmingCharacters(in: .whitespaces))
-                        .font(.body)
-                }
-            } else if trimmed.hasPrefix("1.") || trimmed.hasPrefix("2.") || trimmed.hasPrefix("3.") || trimmed.hasPrefix("4.") {
-                HStack(alignment: .top, spacing: 8) {
-                    Text(String(trimmed.prefix(2))).font(.body).foregroundStyle(.secondary)
-                    Text(String(trimmed.dropFirst(2)).trimmingCharacters(in: .whitespaces))
-                        .font(.body)
+                    Text(String(trimmed.dropFirst(1)).trimmingCharacters(in: .whitespaces)).font(.body)
                 }
             } else {
-                Text(trimmed)
-                    .font(.body)
+                Text(trimmed).font(.body)
             }
+        }
+    }
+
+    private func tagColor(_ name: String) -> Color {
+        switch name.lowercased() {
+        case "case", "cases": return .purple
+        case "verb", "verbs": return .blue
+        case "grammar": return .indigo
+        case "preposition", "prepositions": return .teal
+        case "adjective", "adjectives": return .pink
+        case "noun", "nouns": return .orange
+        case "expression": return .green
+        case "vocabulary": return .cyan
+        case "phrases": return .mint
+        default: return .accentColor
         }
     }
 }
@@ -141,7 +211,6 @@ struct GrammarView: View {
 
 struct TagBadge: View {
     let category: String
-
     var color: Color {
         switch category.lowercased() {
         case "case", "cases": return .purple
@@ -159,12 +228,9 @@ struct TagBadge: View {
 
     var body: some View {
         Text(category.lowercased())
-            .font(.caption2)
-            .fontWeight(.medium)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(color.opacity(0.12))
-            .foregroundStyle(color)
+            .font(.caption2).fontWeight(.medium)
+            .padding(.horizontal, 8).padding(.vertical, 3)
+            .background(color.opacity(0.12)).foregroundStyle(color)
             .clipShape(Capsule())
     }
 }
