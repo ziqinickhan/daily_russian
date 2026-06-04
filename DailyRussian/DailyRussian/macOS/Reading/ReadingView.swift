@@ -223,6 +223,12 @@ struct TopicBadge: View {
         case "Practical": return .purple
         case "Culture & Tech": return .indigo
         case "Humour": return .yellow
+        case "Culture": return .purple
+        case "Sports": return .green
+        case "Weather": return .cyan
+        case "City Life": return .teal
+        case "Tech": return .blue
+        case "Science": return .indigo
         default: return .gray
         }
     }
