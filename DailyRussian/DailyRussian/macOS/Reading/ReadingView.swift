@@ -102,11 +102,11 @@ struct ReadingView: View {
 
                         Divider()
 
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Translation").font(.headline).fontWeight(.medium)
+                        DisclosureGroup("Translation", isExpanded: .constant(true)) {
                             Text(text.translation)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                                .padding(.top, 4)
                         }
 
                         if let notes = text.notes {
@@ -148,9 +148,9 @@ struct ReadingView: View {
 
     private func passageRow(_ text: ReadingText) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(text.englishTitle)
-                .font(.headline)
             Text(text.title)
+                .font(.headline)
+            Text(text.englishTitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
