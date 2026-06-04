@@ -7,6 +7,7 @@ struct ReadingView: View {
     @State private var searchText = ""
     @State private var selectedTags: Set<String> = []
     @State private var selectedDifficulties: Set<String> = []
+    @State private var translationExpanded = true
     @FocusState private var isSearchFocused: Bool
 
     private let tts = TTSProvider()
@@ -102,7 +103,7 @@ struct ReadingView: View {
 
                         Divider()
 
-                        DisclosureGroup("Translation", isExpanded: .constant(true)) {
+                        DisclosureGroup("Translation", isExpanded: $translationExpanded) {
                             Text(text.translation)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
@@ -164,7 +165,7 @@ struct ReadingView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(selectedTextID == text.id ? Color.accentColor.opacity(0.1) : Color.clear)
         .contentShape(Rectangle())
-        .onTapGesture { selectedTextID = text.id }
+        .onTapGesture { selectedTextID = text.id; translationExpanded = true }
     }
 }
 
