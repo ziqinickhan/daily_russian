@@ -167,6 +167,17 @@ struct VocabularyView: View {
             }
         }
         .navigationTitle("Vocabulary")
+        .toolbar {
+            if navigation.previousSection != "Vocabulary" {
+                ToolbarItem(placement: .navigation) {
+                    Button {
+                        navigation.shouldNavigateBack = true
+                    } label: {
+                        Label("Back to \(navigation.previousSection)", systemImage: "arrow.left")
+                    }
+                }
+            }
+        }
         .background(
             Button("") { isSearchFocused = true }
                 .keyboardShortcut("f", modifiers: .command)

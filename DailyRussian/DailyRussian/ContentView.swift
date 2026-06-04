@@ -76,6 +76,7 @@ struct MacOSSidebarView: View {
         case reading = "Reading"
         case news = "News"
         case culture = "Culture"
+        case quiz = "Quiz"
         case aiChat = "AI Tutor"
 
         var icon: String {
@@ -86,6 +87,7 @@ struct MacOSSidebarView: View {
             case .reading: return "text.book.closed"
             case .news: return "newspaper"
             case .culture: return "music.note.list"
+            case .quiz: return "questionmark.circle"
             case .aiChat: return "bubble.left.and.text.bubble.right"
             }
         }
@@ -116,13 +118,24 @@ struct MacOSSidebarView: View {
                 NewsView()
             case .culture:
                 CultureView()
+            case .quiz:
+                QuizView()
             case .aiChat:
                 AIChatView()
             }
         }
         .onChange(of: navigation.navigateToVocabWithWord) { _, target in
             if target != nil {
+                navigation.previousSection = selectedSection.rawValue
                 selectedSection = .vocabulary
+            }
+        }
+        .onChange(of: navigation.shouldNavigateBack) { _, should in
+            if should {
+                navigation.shouldNavigateBack = false
+                if let section = Section.allCases.first(where: { $0.rawValue == navigation.previousSection }) {
+                    selectedSection = section
+                }
             }
         }
     }

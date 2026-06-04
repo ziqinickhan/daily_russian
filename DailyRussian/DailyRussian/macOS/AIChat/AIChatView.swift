@@ -2,12 +2,11 @@ import SwiftUI
 
 /// AI-powered grammar help via Deepseek API. On-demand only.
 struct AIChatView: View {
+    @StateObject private var ai = DeepseekService()
     @State private var messages: [ChatMessage] = []
     @State private var inputText = ""
     @State private var isLoading = false
     @State private var errorText: String?
-
-    private let ai = DeepseekService()
 
     var body: some View {
         VStack(spacing: 0) {

@@ -67,6 +67,10 @@ struct DashboardView: View {
             }
             .padding()
 
+            // Word of the Day
+            WordOfTheDayCard()
+                .padding(.horizontal)
+
             // Study calendar heat map
             StudyCalendarView()
                 .padding(.horizontal)

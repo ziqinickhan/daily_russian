@@ -1,14 +1,13 @@
 import Foundation
-import OSLog
+import Combine
 
 /// Client for the Deepseek API — on-demand grammar explanations and example generation.
-/// Uses the chat completions endpoint. Handles VPN/offline gracefully.
-actor DeepseekService {
-    private let apiKey: String
-    private let baseURL = "https://api.deepseek.com/v1"
-    private let logger = Logger(subsystem: "com.nickhan.DailyRussian", category: "Deepseek")
+final class DeepseekService: ObservableObject {
+    @Published var isAvailable = false
 
-    /// The system prompt that steers the model toward Russian teaching.
+    private var apiKey: String = ""
+    private let baseURL = "https://api.deepseek.com/v1"
+
     private let systemPrompt = """
     You are a knowledgeable Russian language tutor. Your student is an intermediate learner:
     - They know Cyrillic, basic vocabulary, and simple grammar.
@@ -29,54 +28,63 @@ actor DeepseekService {
         let content: String
     }
 
-    struct ChatRequest: Codable {
+    private struct ChatRequest: Codable {
         let model: String
         let messages: [Message]
         let max_tokens: Int
         let temperature: Double
     }
 
-    struct Choice: Codable {
+    private struct Choice: Codable {
         let message: Message
     }
 
-    struct ChatResponse: Codable {
+    private struct ChatResponse: Codable {
         let choices: [Choice]
-        let usage: Usage?
-
-        struct Usage: Codable {
-            let total_tokens: Int
-        }
-    }
-
-    struct Conversation {
-        var messages: [Message] = []
     }
 
     init() {
-        // Load API key from config file in the app bundle
+        loadAPIKey()
+        NSLog("[Deepseek] Initialized, available: \(isAvailable)")
+    }
+
+    private func loadAPIKey() {
+        // Try the bundled config file
         if let url = Bundle.main.url(forResource: "deepseek_config", withExtension: "json"),
            let data = try? Data(contentsOf: url),
            let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
            let key = json["api_key"], !key.isEmpty {
-            self.apiKey = key
-        } else {
-            self.apiKey = ""
-            logger.warning("Deepseek API key not found — AI features disabled")
+            apiKey = key
+            isAvailable = true
+            NSLog("[Deepseek] API key loaded from bundle")
+            return
         }
+        // Fallback: check UserDefaults (for manual entry)
+        if let key = UserDefaults.standard.string(forKey: "deepseek_api_key"), !key.isEmpty {
+            apiKey = key
+            isAvailable = true
+            NSLog("[Deepseek] API key loaded from UserDefaults")
+            return
+        }
+        apiKey = ""
+        isAvailable = false
+        NSLog("[Deepseek] No API key found — AI features disabled")
     }
 
-    var isAvailable: Bool { !apiKey.isEmpty }
+    /// Manually set the API key (for in-app settings).
+    func setKey(_ key: String) {
+        apiKey = key
+        isAvailable = !key.isEmpty
+        UserDefaults.standard.set(key, forKey: "deepseek_api_key")
+    }
 
-    /// Send a message and get a streaming-like response.
+    /// Send a message and get a response.
     func chat(userMessage: String, history: [Message] = []) async throws -> String {
-        guard isAvailable else {
+        guard isAvailable, !apiKey.isEmpty else {
             throw ServiceError.unavailable
         }
 
-        var messages: [Message] = [
-            Message(role: "system", content: systemPrompt)
-        ]
+        var messages: [Message] = [Message(role: "system", content: systemPrompt)]
         messages.append(contentsOf: history)
         messages.append(Message(role: "user", content: userMessage))
 
@@ -111,7 +119,7 @@ actor DeepseekService {
 
             if httpResponse.statusCode != 200 {
                 let body = String(data: data, encoding: .utf8) ?? ""
-                logger.error("Deepseek API error \(httpResponse.statusCode): \(body)")
+                NSLog("[Deepseek] HTTP \(httpResponse.statusCode): \(body.prefix(200))")
                 throw ServiceError.httpError(httpResponse.statusCode)
             }
 
@@ -119,13 +127,13 @@ actor DeepseekService {
             guard let content = decoded.choices.first?.message.content else {
                 throw ServiceError.emptyResponse
             }
+            NSLog("[Deepseek] Response received (len: \(content.count))")
             return content
 
         } catch let error as ServiceError {
             throw error
         } catch {
-            // Network errors (offline, VPN off, GFW block) → graceful
-            logger.error("Deepseek network error: \(error.localizedDescription)")
+            NSLog("[Deepseek] Network error: \(error.localizedDescription)")
             throw ServiceError.networkError(error.localizedDescription)
         }
     }
@@ -145,13 +153,13 @@ extension DeepseekService {
 
         var errorDescription: String? {
             switch self {
-            case .unavailable: return "AI tutor is not configured."
+            case .unavailable: return "API key not configured. Check Settings."
             case .invalidURL: return "Invalid API URL."
             case .badResponse: return "Unexpected server response."
-            case .invalidKey: return "API key is invalid."
-            case .httpError(let code): return "Server error (HTTP \(code))."
+            case .invalidKey: return "API key is invalid. Check Settings."
+            case .httpError(let code): return "Server error (HTTP \(code)). Try again."
             case .emptyResponse: return "Empty response from AI."
-            case .networkError(let msg): return "Network error: \(msg)"
+            case .networkError(let msg): return "Cannot reach Deepseek — check your VPN or internet connection."
             }
         }
     }
