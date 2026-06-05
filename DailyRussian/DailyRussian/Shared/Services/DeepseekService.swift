@@ -89,7 +89,7 @@ final class DeepseekService: ObservableObject {
         messages.append(Message(role: "user", content: userMessage))
 
         let request = ChatRequest(
-            model: "deepseek-chat",
+            model: "deepseek-v4-flash",
             messages: messages,
             max_tokens: 800,
             temperature: 0.7
