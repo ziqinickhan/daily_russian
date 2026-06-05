@@ -270,6 +270,7 @@ struct WordDetailView: View {
                     Text(word.word ?? "")
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                        .textSelection(.enabled)
                     Button {
                         tts.speak(word.word ?? "")
                     } label: {
@@ -282,6 +283,7 @@ struct WordDetailView: View {
 
                 Text(word.translation ?? "")
                     .font(.title3)
+                    .textSelection(.enabled)
 
                 if let pos = word.partOfSpeech {
                     HStack(spacing: 8) {
@@ -342,6 +344,7 @@ struct WordDetailView: View {
                                     Text(form)
                                         .font(.callout)
                                         .fontWeight(.medium)
+                                        .textSelection(.enabled)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -369,6 +372,7 @@ struct WordDetailView: View {
                                         Text(form)
                                             .font(.callout)
                                             .fontWeight(.medium)
+                                            .textSelection(.enabled)
                                     }
                                 }
                             }
@@ -427,6 +431,7 @@ struct NounCaseGrid: View {
                         Text(form)
                             .font(.callout)
                             .fontWeight(.medium)
+                            .textSelection(.enabled)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -467,6 +472,7 @@ struct AdjectiveCaseTable: View {
                         let lookupKey = "\(gKey)_\(cKey)"
                         Text(cases[lookupKey] ?? "—")
                             .font(.caption)
+                            .textSelection(.enabled)
                             .frame(minWidth: 50, alignment: .leading)
                     }
                 }
