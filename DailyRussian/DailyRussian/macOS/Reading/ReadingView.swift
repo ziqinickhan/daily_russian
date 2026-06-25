@@ -274,7 +274,7 @@ struct ReadingText: Identifiable, Hashable {
 
 // MARK: - Passages (38 total)
 
-private let texts: [ReadingText] = [
+let texts: [ReadingText] = [
     // MARK: Conversation (6)
     ReadingText(title: "Знакомство", englishTitle: "Introductions", topic: "Conversation", difficulty: "Beginner", body: "— Приве́т! Как тебя́ зову́т?\n— Меня́ зову́т А́нна. А тебя́?\n— Меня́ зову́т Макси́м. О́чень прия́тно.\n— Взаи́мно. Отку́да ты?\n— Я из Москвы́. А ты?\n— Я из Санкт-Петербу́рга.\n— Кру́то! Я всегда́ хоте́л побыва́ть в Пи́тере.", translation: "Hi! What's your name? — My name is Anna. And yours? — Maxim. Nice to meet you. — Likewise. Where are you from? — I'm from Moscow. And you? — I'm from Saint Petersburg. — Cool! I've always wanted to visit Petersburg.", notes: "Пи́тер = informal for Saint Petersburg. Прия́тно = pleasant/nice."),
     ReadingText(title: "Пе́рвый разгово́р", englishTitle: "First Conversation", topic: "Conversation", difficulty: "Beginner", body: "— Здра́вствуйте! Вы но́вый сосе́д?\n— Да, меня́ зову́т Ива́н. А вас?\n— Еле́на. О́чень прия́тно. Вы давно́ здесь живёте?\n— Нет, то́лько неде́лю. Перее́хал из другого го́рода.\n— Е́сли что́-то ну́жно — обраща́йтесь!", translation: "Hello! Are you the new neighbour? — Yes, my name is Ivan. And you? — Elena. Nice to meet you. Have you lived here long? — No, only a week. I moved from another city. — If you need anything — let me know!", notes: "Обраща́йтесь = reach out / ask (formal imperative). Перее́хал = moved (perfective)."),

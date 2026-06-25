@@ -168,7 +168,7 @@ struct ChatBubble: View {
             VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 4) {
                 Text(message.content)
                     .padding(12)
-                    .background(message.role == .user ? Color.accentColor : Color(.controlBackgroundColor))
+                    .background(message.role == .user ? Color.accentColor : Color.gray.opacity(0.12))
                     .foregroundStyle(message.role == .user ? .white : .primary)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .textSelection(.enabled)

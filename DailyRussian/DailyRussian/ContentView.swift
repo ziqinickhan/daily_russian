@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
     @StateObject private var navigation = AppNavigation()
@@ -51,14 +52,29 @@ struct IOSTabView: View {
                     Label("Learn", systemImage: "text.book.closed")
                 }
 
+            IOSVocabularyView()
+                .tabItem {
+                    Label("Words", systemImage: "character.book.closed")
+                }
+
+            IOSGrammarView()
+                .tabItem {
+                    Label("Grammar", systemImage: "book.pages")
+                }
+
+            IOSReadingView()
+                .tabItem {
+                    Label("Reading", systemImage: "text.book.closed")
+                }
+
+            IOSNewsView()
+                .tabItem {
+                    Label("News", systemImage: "newspaper")
+                }
+
             ReviewView()
                 .tabItem {
                     Label("Review", systemImage: "clock")
-                }
-
-            QuickLookView()
-                .tabItem {
-                    Label("Words", systemImage: "character.book.closed")
                 }
         }
     }

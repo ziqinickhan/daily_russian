@@ -6,6 +6,7 @@ struct KeyboardNavigable: ViewModifier {
     let itemIDs: [UUID]
 
     func body(content: Content) -> some View {
+        #if os(macOS)
         content
             .focusable()
             .focusEffectDisabled()
@@ -23,6 +24,9 @@ struct KeyboardNavigable: ViewModifier {
                 default: break
                 }
             }
+        #else
+        content
+        #endif
     }
 }
 

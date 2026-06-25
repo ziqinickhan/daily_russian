@@ -124,6 +124,7 @@ struct VocabularyView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
+                #if os(macOS)
                 HSplitView {
                     // Word list
                     ScrollView {
@@ -164,6 +165,7 @@ struct VocabularyView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
+                #endif
             }
         }
         .navigationTitle("Vocabulary")
