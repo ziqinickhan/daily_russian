@@ -81,7 +81,9 @@ struct IOSGrammarView: View {
                                 .padding()
                             }
                             .navigationTitle(note.title ?? "")
+                            #if os(iOS)
                             .navigationBarTitleDisplayMode(.inline)
+                            #endif
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(note.title ?? "").font(.headline)

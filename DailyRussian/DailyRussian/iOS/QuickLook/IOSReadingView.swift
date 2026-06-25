@@ -97,7 +97,9 @@ struct IOSReadingView: View {
                                 .padding()
                             }
                             .navigationTitle(text.title)
+                            #if os(iOS)
                             .navigationBarTitleDisplayMode(.inline)
+                            #endif
                             .toolbar {
                                 ToolbarItem {
                                     Button { tts.speak(text.body) } label: {

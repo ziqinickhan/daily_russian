@@ -73,7 +73,9 @@ struct IOSNewsView: View {
                                 .padding()
                             }
                             .navigationTitle(story.headline)
+                            #if os(iOS)
                             .navigationBarTitleDisplayMode(.inline)
+                            #endif
                             .toolbar {
                                 ToolbarItem {
                                     Button { tts.speak(story.body) } label: {
