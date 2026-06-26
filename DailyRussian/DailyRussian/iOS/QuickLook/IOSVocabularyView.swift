@@ -42,6 +42,12 @@ struct IOSVocabularyView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // Always-visible search bar
+                TextField("Search vocabulary...", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+
                 // Tag filter
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
@@ -93,7 +99,6 @@ struct IOSVocabularyView: View {
                 .listStyle(.plain)
             }
             .navigationTitle("Words")
-            .searchable(text: $searchText, prompt: "Search vocabulary...")
         }
     }
 

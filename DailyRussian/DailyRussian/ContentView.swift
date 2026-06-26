@@ -71,11 +71,6 @@ struct IOSTabView: View {
                 .tabItem {
                     Label("News", systemImage: "newspaper")
                 }
-
-            ReviewView()
-                .tabItem {
-                    Label("Review", systemImage: "clock")
-                }
         }
     }
 }
